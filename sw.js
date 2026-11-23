@@ -1,4 +1,4 @@
-const CACHE = 'kazu-v7';
+const CACHE = 'kazu-v8';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'notes.js', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/kanji-jo.png'];
 
@@ -14,7 +14,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    fetch(e.request).then(res => {
+    fetch(e.request, { cache: 'no-cache' }).then(res => {
       if (res.ok && res.url.startsWith(self.location.origin)) {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));

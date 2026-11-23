@@ -1,6 +1,6 @@
 'use strict';
 const APP_TITLE = '日本語 数の単位 おぼえーる';
-const APP_VER = 'v7';
+const APP_VER = 'v8';
 
 /* ---------- データ ---------- */
 // [名称, 読み, 10の指数]
@@ -82,6 +82,7 @@ function home() {
   const sm = realSet('small'), S = SETS[sm];
   const first = S.items[0], last = S.items[S.items.length - 1];
   screen(APP_TITLE, `
+    <h2 class="apptitle">${APP_TITLE}</h2>
     <button class="hero big" data-s="big"><b>大きい数</b><span>一 〜 無量大数（10<sup>0</sup> 〜 10<sup>68</sup>）</span></button>
     <button class="hero small" data-s="small"><b>小さい数</b><span>${first[0]} 〜 ${last[0]}（10<sup>-1</sup> 〜 10<sup>${last[2]}</sup>）</span></button>
     <button class="btn" id="rec">学習の記録<small>${rec.sessions.length}回分のクイズ ／ 要復習 ${pendingAll()}件</small></button>
@@ -182,8 +183,8 @@ function question() {
     <div class="q"><div class="meta">${S.label}</div>
       <div class="word">${ruby(q)}</div>
       <div class="ask">の<b>${S.dir}単位</b>は？</div></div>
+    <div id="prev">${prevHtml('前の問題')}</div>
     <div id="opts">${opts.map(i => `<button class="btn opt" data-i="${i}">${ruby(S.items[i])}</button>`).join('')}</div>
-    <div id="prev">${prevHtml('前問')}</div>
   `, () => { if (confirm('クイズを中断しますか？（この回の結果は記録されません）')) { Q.token++; menu(Q.set0); } }, Q.set);
   app.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.i));
 }
@@ -195,16 +196,8 @@ function answer(i) {
   else { st.ng++; st.pending = true; Q.misses.push(c.qi); }
   save();
   Q.prev = { qi: c.qi, ok };
-  app.querySelectorAll('.opt').forEach(b => {
-    b.disabled = true; b.style.opacity = 1;
-    if (+b.dataset.i === c.ans) b.classList.add('ok');
-    else if (+b.dataset.i === i) b.classList.add('ng');
-  });
-  const tk = ++Q.token, lastQ = Q.n + 1 >= Q.qs.length;
-  setTimeout(() => {
-    if (!Q || Q.token !== tk) return;
-    if (lastQ) finish(); else { Q.n++; question(); }
-  }, ok ? 650 : 1300);
+  Q.token++;
+  if (Q.n + 1 >= Q.qs.length) finish(); else { Q.n++; question(); }
 }
 function finish() {
   const S = SETS[Q.set];
@@ -260,11 +253,12 @@ function records() {
 /* ---------- 起動 ---------- */
 home();
 if ('serviceWorker' in navigator) {
-  // 新しい版が有効になったら一度だけ読み込み直して、常に最新の画面にする
+  // 新しい版が有効になったら読み込み直して、常に最新の画面にする
+  const had = !!navigator.serviceWorker.controller;
   let reloaded = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloaded || !localStorage.getItem('kazu-sw-seen')) { try { localStorage.setItem('kazu-sw-seen', '1'); } catch (e) {} return; }
+    if (!had || reloaded) return;
     reloaded = true; location.reload();
   });
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(r => r.update()).catch(() => {}));
 }
