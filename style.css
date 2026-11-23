@@ -17,10 +17,11 @@ main{max-width:480px;margin:0 auto;padding:14px 14px 32px}
 ruby rt{font-size:.5em;color:var(--sub);font-weight:400}
 .nort rt{visibility:hidden}
 
-.btn{display:flex;align-items:center;justify-content:space-between;width:100%;
+.btn{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:100%;
   min-height:56px;padding:12px 16px;margin:0 0 10px;border:1px solid var(--line);
   border-radius:14px;background:var(--card);color:var(--ink);font-size:17px;
   font-weight:600;text-align:left;font-family:inherit}
+.btn b{font-weight:700}
 .btn small{display:block;font-weight:400;color:var(--sub);font-size:13px}
 .btn:active{background:#eef3fa}
 .btn.primary{background:var(--main);border-color:var(--main);color:#fff}
@@ -58,7 +59,15 @@ ruby rt{font-size:.5em;color:var(--sub);font-weight:400}
 .q .ask{font-size:16px}
 .prog{height:6px;background:var(--line);border-radius:3px;margin-bottom:12px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--main)}
-.opt{font-size:24px;justify-content:center;text-align:center;min-height:64px}
+.opt{font-size:30px;align-items:center;justify-content:center;text-align:center;min-height:76px;line-height:1.7;padding:6px 8px}
+.opt ruby rt{font-size:.38em}
+.btn.c{align-items:center;text-align:center}
+.fbt{font-weight:700;margin-bottom:2px}
+.ex2 a,.ex a{color:var(--main)}
+.ver{text-align:center;font-size:11px;color:var(--sub)}
+.cite{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:16px}
+.cite h2{font-size:15px;margin:0 0 6px;color:var(--ink)}
+.fb{background-clip:padding-box}
 .opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 .opt.ng{background:var(--ng-bg);border-color:var(--ng);color:var(--ng)}
 .fb{padding:12px;border-radius:12px;margin-bottom:10px;font-size:15px}
@@ -83,3 +92,6 @@ img.gl{height:.92em;width:auto;vertical-align:-.12em;display:inline-block}
 .ex2{margin-top:6px;font-size:13.5px;color:var(--ink);font-weight:400}
 .hide-ex .row:not(.reveal) .ex{display:none}
 .log .ex{padding:4px 0 0}
+.cite{font-size:12.5px;color:var(--sub);line-height:1.6}
+.cite p{margin:0 0 6px}.cite ul{margin:0 0 6px;padding-left:4px;list-style:none}
+.cite li{margin-bottom:3px}.cite a{color:var(--main);word-break:break-all}

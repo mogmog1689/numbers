@@ -1,4 +1,4 @@
-const CACHE = 'kazu-v5';
+const CACHE = 'kazu-v7';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'notes.js', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/kanji-jo.png'];
 
@@ -10,13 +10,16 @@ self.addEventListener('activate', e => {
     .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
+// ネットワーク優先（常に最新を取得）、失敗時のみキャッシュ（オフライン対応）
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy));
+    fetch(e.request).then(res => {
+      if (res.ok && res.url.startsWith(self.location.origin)) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+      }
       return res;
-    }).catch(() => caches.match('index.html')))
+    }).catch(() => caches.match(e.request).then(h => h || caches.match('index.html')))
   );
 });

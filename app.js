@@ -70,6 +70,16 @@ function home() {
     <button class="hero small" data-s="small"><b>小さい数</b><span>割 〜 涅槃寂静（10<sup>-1</sup> 〜 10<sup>-25</sup>）</span></button>
     <button class="btn" id="rec">学習の記録<small>${rec.sessions.length}回分のクイズ ／ 要復習 ${np}件</small></button>
     <p class="hint">大きい数は一・十・百・千のあと、万以降は一万進（万・億・兆…）です。小さい数は 割=0.1、分=0.01 から始まります。</p>
+    <div class="sec">引用元</div>
+    <div class="cite">
+      <p>各単位の解説は、次の資料を①→②→③の優先順位で参照し、要約したものです（各解説の末尾に出典名を表示）。</p>
+      <ul>
+        <li>① <a href="https://jodoshuzensho.jp/daijiten/index.php/" target="_blank" rel="noopener">新纂浄土宗大辞典（WEB版）</a></li>
+        <li>② <a href="https://kotobank.jp/" target="_blank" rel="noopener">コトバンク</a>（デジタル大辞泉など）</li>
+        <li>③ <a href="https://ja.wikipedia.org/wiki/命数法" target="_blank" rel="noopener">Wikipedia「命数法」ほか各単位の項目</a></li>
+      </ul>
+      <p>読み方は <a href="https://www.benricho.org/kanji/kansushi.html" target="_blank" rel="noopener">漢数詞（便利蝶）</a> を参考にしています。</p>
+    </div>
   `, null);
   app.querySelectorAll('.hero').forEach(b => b.onclick = () => menu(b.dataset.s));
   $('#rec').onclick = records;
