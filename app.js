@@ -1,6 +1,6 @@
 'use strict';
 const APP_TITLE = '日本語 数の単位 おぼえーる';
-const APP_VER = 'v8';
+const APP_VER = 'v10';
 
 /* ---------- データ ---------- */
 // [名称, 読み, 10の指数]
@@ -55,10 +55,13 @@ const GLYPH = { '𥝱': 'icons/kanji-jo.png' };  // 端末のフォントに無�
 const glyph = n => GLYPH[n] ? `<img class="gl" src="${GLYPH[n]}" alt="${n}">` : n;
 const ruby = it => `<ruby>${glyph(it[0])}<rt>${it[1]}</rt></ruby>`;
 const exHtml = (name, c = 'ex') => {
-  const n = NOTES[name]; if (!n) return '';
-  const links = n[1].slice().sort((a, b) => SRC_ORDER.indexOf(a[0]) - SRC_ORDER.indexOf(b[0]))
-    .map(([k, t]) => `<a href="${srcUrl(k, t)}" target="_blank" rel="noopener">${SRC[k]}</a>`).join('・');
-  return `<div class="${c}">${n[0]}<small>出典：${links}</small></div>`;
+  try {
+    const n = (typeof NOTES !== 'undefined') && NOTES[name]; if (!n) return '';
+    if (!Array.isArray(n[1])) return `<div class="${c}">${n[0]}</div>`;   // 旧形式のnotes.jsでも止まらないように
+    const links = n[1].slice().sort((a, b) => SRC_ORDER.indexOf(a[0]) - SRC_ORDER.indexOf(b[0]))
+      .map(([k, t]) => `<a href="${srcUrl(k, t)}" target="_blank" rel="noopener">${SRC[k]}</a>`).join('・');
+    return `<div class="${c}">${n[0]}<small>出典：${links}</small></div>`;
+  } catch (err) { return ''; }
 };
 const pow = n => `10<sup>${n}</sup>`;
 const now = () => {
@@ -82,7 +85,6 @@ function home() {
   const sm = realSet('small'), S = SETS[sm];
   const first = S.items[0], last = S.items[S.items.length - 1];
   screen(APP_TITLE, `
-    <h2 class="apptitle">${APP_TITLE}</h2>
     <button class="hero big" data-s="big"><b>大きい数</b><span>一 〜 無量大数（10<sup>0</sup> 〜 10<sup>68</sup>）</span></button>
     <button class="hero small" data-s="small"><b>小さい数</b><span>${first[0]} 〜 ${last[0]}（10<sup>-1</sup> 〜 10<sup>${last[2]}</sup>）</span></button>
     <button class="btn" id="rec">学習の記録<small>${rec.sessions.length}回分のクイズ ／ 要復習 ${pendingAll()}件</small></button>
@@ -183,8 +185,8 @@ function question() {
     <div class="q"><div class="meta">${S.label}</div>
       <div class="word">${ruby(q)}</div>
       <div class="ask">の<b>${S.dir}単位</b>は？</div></div>
-    <div id="prev">${prevHtml('前の問題')}</div>
     <div id="opts">${opts.map(i => `<button class="btn opt" data-i="${i}">${ruby(S.items[i])}</button>`).join('')}</div>
+    <div id="prev">${prevHtml('前の問題')}</div>
   `, () => { if (confirm('クイズを中断しますか？（この回の結果は記録されません）')) { Q.token++; menu(Q.set0); } }, Q.set);
   app.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.i));
 }

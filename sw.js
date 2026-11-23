@@ -1,5 +1,5 @@
-const CACHE = 'kazu-v8';
-const FILES = ['./', 'index.html', 'style.css', 'app.js', 'notes.js', 'manifest.webmanifest',
+const CACHE = 'kazu-v10';
+const FILES = ['./', 'index.html', 'style.css?v=10', 'app.js?v=10', 'notes.js?v=10', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/kanji-jo.png'];
 
 self.addEventListener('install', e => {
